@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comments | Flight Delay Prediction</title>
+  <meta name="description" content="A guide for recruiters to the flight delay prediction project, plus how this website was built and the accessibility choices behind it.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="brand">
+        <span class="brand-name">Flight Delay Prediction</span>
+        <span class="brand-sub">Data analytics project by Radhika Singhal</span>
+      </div>
+      <nav id="site-nav" aria-label="Main Navigation">
+        <ul class="nav-list" role="list">
+          <li><a class="nav-link" href="index.html">Overview</a></li>
+          <li><a class="nav-link" href="finding.html">The Finding</a></li>
+          <li><a class="nav-link" href="models.html">Models</a></li>
+          <li><a class="nav-link" href="limits.html">Limits</a></li>
+          <li><a class="nav-link current" href="comments.html" aria-current="page">Comments</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="hero">
+      <div class="wrap">
+        <p class="tagline">Comments &middot; for recruiters and curious visitors</p>
+        <h1>Notes on the project, and on how this site was made.</h1>
+        <p class="lead">
+          The first half is a one-minute guide for recruiters and hiring teams, and needs no data
+          science background. The second half covers how this website was built and the accessibility
+          choices behind it.
+        </p>
+        <div class="button-row">
+          <a class="cta-link" href="https://github.com/radhikasinghal0112-source/flight-arrival-delay-prediction">Code on GitHub</a>
+          <a class="cta-link secondary" href="mailto:radhikasinghal0112@gmail.com">Email me</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-block">
+      <div class="wrap">
+        <h2 class="section-heading">At a glance</h2>
+        <div class="table-scroll" role="region" aria-label="Project summary" tabindex="0">
+          <table>
+            <caption>The project in one table</caption>
+            <tbody>
+              <tr><th scope="row">What it is</th><td>A system that predicts whether a flight will arrive late, built and tested on 42,634 real flight records.</td></tr>
+              <tr><th scope="row">Context</th><td>Course project, Introduction to Data Analytics, October 2026.</td></tr>
+              <tr><th scope="row">Tools</th><td>Python, pandas, NumPy, scikit-learn, matplotlib, Jupyter, LaTeX.</td></tr>
+              <tr><th scope="row">Outcome</th><td>Best model scored an F1 of 0.8471 on a held-back Kaggle test set, and 0.853 on my own hold-out. Starting from the same data, my first attempt scored 0.60.</td></tr>
+              <tr><th scope="row">Deliverables</th><td>A reproducible notebook, a written report with nine figures, and this website.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-block">
+      <div class="wrap">
+        <h2 class="section-heading">What this project shows about how I work</h2>
+        <div class="table-scroll" role="region" aria-label="Skills and the evidence for each" tabindex="0">
+          <table>
+            <caption>Each skill is paired with something you can check in the report or the code</caption>
+            <thead>
+              <tr>
+                <th scope="col">Skill</th>
+                <th scope="col">Evidence</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Investigating data before modelling</th>
+                <td>Noticed that the data files were sorted by a column they never supplied (row position correlated 0.97 with departure time across 334 days), and used it to recover each flight&rsquo;s departure delay.</td>
+              </tr>
+              <tr>
+                <th scope="row">Feature engineering</th>
+                <td>The row-order features alone raised every one of seven models by 14 to 18 F1 points. Tuning, a wider search and ensembling together added 0.5 points or less.</td>
+              </tr>
+              <tr>
+                <th scope="row">Choosing the right objective</th>
+                <td>Tuned for the competition metric (F1) instead of accuracy, and chose the decision cut-off from out-of-fold predictions. That alone lifted the first model from 0.6044 to 0.6407.</td>
+              </tr>
+              <tr>
+                <th scope="row">Careful evaluation</th>
+                <td>Stratified hold-out, leakage controls inside the pipeline, and three estimates (cross-validation, hold-out, Kaggle) that agree within one point for six of the seven models.</td>
+              </tr>
+              <tr>
+                <th scope="row">Error analysis</th>
+                <td>Showed that 16% of flights account for 63% of the best model&rsquo;s errors, and that they cluster where about half of the flights are delayed.</td>
+              </tr>
+              <tr>
+                <th scope="row">Honest reporting</th>
+                <td>Stated in the report where the result stops: the key feature depends on how the files were assembled, and the hold-out was consulted in two exploratory comparisons.</td>
+              </tr>
+              <tr>
+                <th scope="row">Communicating results</th>
+                <td>A written report with nine figures, a documented repository with a requirements file, and this site, built so a non-specialist can follow it.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-block">
+      <div class="wrap">
+        <h2 class="section-heading">Three decisions worth noticing</h2>
+        <ul class="site-list" role="list">
+          <li>
+            <strong>I treated my best result as a limitation too.</strong> The biggest gain came from
+            an artefact of how the files were sorted. I said so plainly and explained what a real
+            system would do instead, rather than presenting the score as a general result.
+          </li>
+          <li>
+            <strong>I kept the test honest.</strong> Imputation and encoders were fitted on training
+            rows only, labels were never used to build the order-based features, and Kaggle scores were
+            consulted only after models were chosen.
+          </li>
+          <li>
+            <strong>I measured what mattered.</strong> I added features one group at a time across all
+            seven models, so the claim that features beat algorithms rests on a table, not a hunch.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="about-block">
+      <div class="wrap">
+        <h2 class="section-heading">How much time do you have?</h2>
+        <ul class="pointer-list" role="list">
+          <li>
+            <span class="pointer-arrow" aria-hidden="true">&rarr;</span>
+            <span><strong>2 minutes:</strong> the <a href="index.html">Overview</a> has the headline numbers and a four-line summary.</span>
+          </li>
+          <li>
+            <span class="pointer-arrow" aria-hidden="true">&rarr;</span>
+            <span><strong>5 minutes:</strong> <a href="finding.html">The Finding</a> explains the hidden pattern, with an interactive view.</span>
+          </li>
+          <li>
+            <span class="pointer-arrow" aria-hidden="true">&rarr;</span>
+            <span><strong>15 minutes:</strong> <a href="models.html">Models</a> and <a href="limits.html">Limits</a> cover the comparison and the caveats.</span>
+          </li>
+          <li>
+            <span class="pointer-arrow" aria-hidden="true">&rarr;</span>
+            <span><strong>Full detail:</strong> the <a href="report.pdf">report (PDF)</a> and the <a href="https://github.com/radhikasinghal0112-source/flight-arrival-delay-prediction">repository</a>.</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="about-block">
+      <div class="wrap">
+        <h2 class="section-heading">Scope, stated plainly</h2>
+        <p>
+          This is a course project on a supplied dataset. It is not a production system, and the
+          scores describe how well the models classify flights that have already landed, not how well
+          they forecast. I include that here because I would rather you hear it from me than discover
+          it.
+        </p>
+      </div>
+    </section>
+
+
+    <section class="about-block">
+      <div class="wrap">
+        <h2 class="section-heading">How this website was made</h2>
+        <p>
+          The site is five static pages with no framework and no build step. That keeps it fast,
+          easy to host, and easy for me to explain line by line.
+        </p>
+        <div class="table-scroll" role="region" aria-label="Technologies used to build the site" tabindex="0">
+          <table>
+            <caption>What the site is built with, and why</caption>
+            <thead>
+              <tr>
+                <th scope="col">Part</th>
+                <th scope="col">Choice</th>
+                <th scope="col">Why</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Structure</th>
+                <td>Semantic HTML5: <code>header</code>, <code>nav</code>, <code>main</code>, <code>section</code>, <code>footer</code></td>
+                <td>Gives the page a clear outline for browsers, search engines and screen readers.</td>
+              </tr>
+              <tr>
+                <th scope="row">Styling</th>
+                <td>One shared stylesheet, plain CSS, with Flexbox for the header and CSS Grid for the stat tiles and the sliders</td>
+                <td>All five pages stay consistent, and there is no framework to learn or maintain.</td>
+              </tr>
+              <tr>
+                <th scope="row">Colour</th>
+                <td>A calm sage-green palette: <code>#F2F6EE</code> background, <code>#2F4A34</code> headings, alternating <code>#DDEAD6</code> bands</td>
+                <td>Low eye strain over long reading, with strong contrast on every background.</td>
+              </tr>
+              <tr>
+                <th scope="row">Typography</th>
+                <td>Lora for headings and Nunito Sans for body text, with Georgia and system fonts as fallbacks</td>
+                <td>A serif and sans-serif pairing that reads well, and the page still looks fine if the fonts fail to load.</td>
+              </tr>
+              <tr>
+                <th scope="row">Interactivity</th>
+                <td>One small vanilla JavaScript file for the sliders on the Finding page</td>
+                <td>No libraries, so there is nothing else to load, and the page works without it.</td>
+              </tr>
+              <tr>
+                <th scope="row">Figures</th>
+                <td>The report&rsquo;s vector charts exported to PNG, with width and height set and lazy loading</td>
+                <td>The text does not jump around as images load, and the page loads quickly.</td>
+              </tr>
+              <tr>
+                <th scope="row">Hosting</th>
+                <td>Static files on GitHub Pages</td>
+                <td>Free, and it deploys straight from the repository.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-block">
+      <div class="wrap">
+        <h2 class="section-heading">Accessibility</h2>
+        <p>
+          I wanted the site to work for people who read it in different ways. These are the choices I
+          made, and the checks behind them.
+        </p>
+        <ul class="site-list" role="list">
+          <li>
+            <strong>Screen readers.</strong> Pages use landmark regions and a proper heading order. The
+            current page is marked with <code>aria-current</code>, tables have header cells and
+            captions, and every chart has a text description that includes its key numbers.
+          </li>
+          <li>
+            <strong>Keyboard only.</strong> Every link, slider and scrollable table or chart can be
+            reached with the Tab key, with a clear focus outline. A &ldquo;Skip to main content&rdquo;
+            link appears on the first Tab press so the menu can be bypassed.
+          </li>
+          <li>
+            <strong>Low vision.</strong> All text meets the WCAG AA contrast ratio of 4.5:1, checked
+            with a contrast calculation, and the lowest pairing is about 4.6:1. Text sizes are
+            relative, line height is generous, and zooming is not blocked.
+          </li>
+          <li>
+            <strong>Sliders.</strong> Each slider has a visible label and announces its value, for
+            example &ldquo;5 to 8 min, 62 percent delayed&rdquo;. Without JavaScript they are hidden
+            and the charts above carry the same numbers.
+          </li>
+          <li>
+            <strong>Motion.</strong> Transitions are switched off for visitors whose system asks for
+            reduced motion.
+          </li>
+          <li>
+            <strong>Phones.</strong> I checked the layout at desktop and phone widths. Pages never
+            scroll sideways, and wide charts and tables scroll inside their own box instead.
+          </li>
+        </ul>
+        <h3>What I did not test</h3>
+        <p>
+          My checks were a contrast calculation and viewing the pages in a browser at two widths. I
+          have not tested the site with a screen reader or on a range of real devices, so there may be
+          issues I have not found. If you spot one, I would like to know.
+        </p>
+      </div>
+    </section>
+    <section class="about-block">
+      <div class="wrap">
+        <h2 class="section-heading">Get in touch</h2>
+        <p>
+          If you would like to connect, email me at <a href="mailto:radhikasinghal0112@gmail.com">radhikasinghal0112@gmail.com</a>. I am happy to
+          walk through any part of this project, including the parts that did not work.
+        </p>
+        <div class="button-row">
+          <a class="cta-link" href="mailto:radhikasinghal0112@gmail.com">Email me</a>
+          <a class="cta-link secondary" href="https://github.com/radhikasinghal0112-source/flight-arrival-delay-prediction">Code on GitHub</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <nav aria-label="Footer navigation">
+      <ul class="footer-nav" role="list">
+        <li><a class="nav-link" href="index.html">Overview</a></li>
+          <li><a class="nav-link" href="finding.html">The Finding</a></li>
+          <li><a class="nav-link" href="models.html">Models</a></li>
+          <li><a class="nav-link" href="limits.html">Limits</a></li>
+          <li><a class="nav-link current" href="comments.html" aria-current="page">Comments</a></li>
+      </ul>
+    </nav>
+    <p class="footer-note">Course project for Introduction to Data Analytics, October 2026. The course data is not redistributed here.</p>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Overview | Flight Delay Prediction</title>
+  <meta name="description" content="A data analytics project that predicts flight arrival delays with seven classifiers, and the hidden pattern in the data that drove the result.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="brand">
+        <span class="brand-name">Flight Delay Prediction</span>
+        <span class="brand-sub">Data analytics project by Radhika Singhal</span>
+      </div>
+      <nav id="site-nav" aria-label="Main Navigation">
+        <ul class="nav-list" role="list">
+          <li><a class="nav-link current" href="index.html" aria-current="page">Overview</a></li>
+          <li><a class="nav-link" href="finding.html">The Finding</a></li>
+          <li><a class="nav-link" href="models.html">Models</a></li>
+          <li><a class="nav-link" href="limits.html">Limits</a></li>
+          <li><a class="nav-link" href="comments.html">Comments</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="hero">
+      <div class="wrap">
+        <p class="tagline">Course project &middot; Introduction to Data Analytics</p>
+        <h1>Predicting which flights arrive late.</h1>
+        <p class="lead">
+          I built seven classifiers to predict whether a flight arrives delayed, using 42,634
+          labelled flights. The biggest gain did not come from a better algorithm. It came from
+          noticing that the data files were <span class="highlight">sorted by scheduled departure
+          time</span>, which made it possible to recover a column the files never contained.
+        </p>
+
+        <ul class="stat-grid" role="list">
+          <li class="stat">
+            <span class="stat-num">0.847</span>
+            <span class="stat-label">Kaggle F1 of the best model, Gradient Boosting</span>
+          </li>
+          <li class="stat">
+            <span class="stat-num">0.853</span>
+            <span class="stat-label">Hold-out F1 of the same model</span>
+          </li>
+          <li class="stat">
+            <span class="stat-num">+14 to 18 pts</span>
+            <span class="stat-label">Hold-out F1 gained by the row-order features, for every model</span>
+          </li>
+          <li class="stat">
+            <span class="stat-num">0.903</span>
+            <span class="stat-label">AUC of the two key signals combined, against about 0.73 alone</span>
+          </li>
+        </ul>
+
+        <div class="button-row">
+          <a class="cta-link" href="https://github.com/radhikasinghal0112-source/flight-arrival-delay-prediction">View the code on GitHub</a>
+          <a class="cta-link secondary" href="report.pdf">Read the full report (PDF)</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-block">
+      <div class="wrap">
+        <h2 class="section-heading">The project in four lines</h2>
+        <ul class="site-list" role="list">
+          <li>
+            <strong>The task.</strong> Classify each flight as delayed or not delayed on arrival,
+            scored by the F1 of the delayed class. The final models were scored on 21,318 unlabelled
+            flights through a Kaggle competition.
+          </li>
+          <li>
+            <strong>The finding.</strong> A flight that left late appears out of place in a file
+            sorted by scheduled departure, so its departure delay can be estimated from its row
+            position alone.
+          </li>
+          <li>
+            <strong>The result.</strong> Feature engineering was worth 17 to 19 points on Kaggle.
+            Tuning, a wider search and ensembling together were worth 0.5 points or less.
+          </li>
+          <li>
+            <strong>The caveat.</strong> The key feature depends on how the files were assembled, so
+            it would not carry over to data without that ordering.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="about-block">
+      <div class="wrap">
+        <h2 class="section-heading">How the project ran</h2>
+        <p>
+          Two files went in: a labelled file for building models and an unlabelled file for the final
+          Kaggle assessment. Every model followed the same path, and the cut-off that turns a score
+          into a prediction was chosen on out-of-fold predictions, not fixed at 0.5.
+        </p>
+        <figure class="figure" tabindex="0" role="group" aria-label="Chart, scrolls sideways on small screens">
+          <img src="figures/fig1_workflow.png" width="1082" height="328" alt="Flow chart of nine steps: the two raw files, cleaning and imputation, feature engineering, an 80/20 split, tuning each model with 5-fold cross-validation on F1, choosing the cut-off on out-of-fold F1, one look at the hold-out, refitting on all labelled flights, scoring the unknown file, and submitting to Kaggle." loading="lazy">
+          <figcaption>Workflow from the two raw files to the Kaggle submission.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="about-block">
+      <div class="wrap">
+        <h2 class="section-heading">Where to go next</h2>
+        <ul class="pointer-list" role="list">
+          <li>
+            <span class="pointer-arrow" aria-hidden="true">&rarr;</span>
+            <span>Want to see the hidden pattern? Read <a href="finding.html">The Finding</a>.</span>
+          </li>
+          <li>
+            <span class="pointer-arrow" aria-hidden="true">&rarr;</span>
+            <span>Curious how the seven models compared? See <a href="models.html">Models &amp; Results</a>.</span>
+          </li>
+          <li>
+            <span class="pointer-arrow" aria-hidden="true">&rarr;</span>
+            <span>Wondering what the result does not show? Check <a href="limits.html">Limits &amp; Next Steps</a>.</span>
+          </li>
+          <li>
+            <span class="pointer-arrow" aria-hidden="true">&rarr;</span>
+            <span>Hiring, or curious how this site was made? See <a href="comments.html">Comments</a>.</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <nav aria-label="Footer navigation">
+      <ul class="footer-nav" role="list">
+        <li><a class="nav-link current" href="index.html" aria-current="page">Overview</a></li>
+          <li><a class="nav-link" href="finding.html">The Finding</a></li>
+          <li><a class="nav-link" href="models.html">Models</a></li>
+          <li><a class="nav-link" href="limits.html">Limits</a></li>
+          <li><a class="nav-link" href="comments.html">Comments</a></li>
+      </ul>
+    </nav>
+    <p class="footer-note">Course project for Introduction to Data Analytics, October 2026. The course data is not redistributed here.</p>
+  </footer>
+
+</body>
+</html>

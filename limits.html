@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Limits and Next Steps | Flight Delay Prediction</title>
+  <meta name="description" content="The limitations of the flight delay prediction result, how far to trust the scores, future work, and how to run the code.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="brand">
+        <span class="brand-name">Flight Delay Prediction</span>
+        <span class="brand-sub">Data analytics project by Radhika Singhal</span>
+      </div>
+      <nav id="site-nav" aria-label="Main Navigation">
+        <ul class="nav-list" role="list">
+          <li><a class="nav-link" href="index.html">Overview</a></li>
+          <li><a class="nav-link" href="finding.html">The Finding</a></li>
+          <li><a class="nav-link" href="models.html">Models</a></li>
+          <li><a class="nav-link current" href="limits.html" aria-current="page">Limits</a></li>
+          <li><a class="nav-link" href="comments.html">Comments</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="hero">
+      <div class="wrap">
+        <p class="tagline">Honest caveats and what comes next</p>
+        <h1>What the result does and does not show.</h1>
+        <p class="lead">
+          The scores are real, but the key feature comes from how the files were put together. Here
+          is where that limits the conclusions.
+        </p>
+      </div>
+    </section>
+
+    <section class="about-block">
+      <div class="wrap">
+        <h2 class="section-heading">Limitations</h2>
+        <ul class="site-list" role="list">
+          <li>
+            <strong>The key feature depends on file order.</strong> The file order stands in for the
+            scheduled departure time, which an airline already knows from its timetable. The features
+            make a missing column recoverable; they are not a discovery about what causes delays. They
+            would not carry over to data without that ordering, and a deployed system would read the
+            scheduled departure directly.
+          </li>
+          <li>
+            <strong>Several strong inputs are only known late.</strong> Elapsed time, air time,
+            wheels-on time and taxi-in time are realised during or after a flight. The scores describe
+            retrospective classification of completed flights, not early forecasting.
+          </li>
+          <li>
+            <strong>Features were built before the split.</strong> The row-order and pooled features use
+            departure times and positions, never labels, but they are built from the supplied files
+            before the train/hold-out split. The evaluation therefore assumes each day&rsquo;s flight
+            lists are available at once.
+          </li>
+          <li>
+            <strong>Some cases are out of scope.</strong> Neither file contains a cancelled or diverted
+            flight, and October is absent, so the models are not validated for either.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="about-block">
+      <div class="wrap">
+        <h2 class="section-heading">How far to trust the numbers</h2>
+        <p>
+          Cross-validated, hold-out and Kaggle estimates agree within one point for six of the seven
+          models, and within 1.6 points for Logistic Regression. They remain estimates. The cut-offs
+          are chosen on the same labels as each cross-validated score, which makes those scores
+          slightly optimistic, and only one random hold-out split was used. The hold-out also informed
+          two exploratory comparisons, so it is not a completely untouched test set.
+        </p>
+        <p>
+          One simulation suggested that about 0.87 is a practical ceiling for this feature design,
+          because recovering the departure delay perfectly would lift Gradient Boosting from about
+          0.85 to about 0.87. That is a hypothesis supported by a single experiment.
+        </p>
+      </div>
+    </section>
+
+    <section class="about-block">
+      <div class="wrap">
+        <h2 class="section-heading">Where I would take it next</h2>
+        <ul class="site-list" role="list">
+          <li>Treat each day&rsquo;s ordered flight list as a sequence and train a transformer to learn the ordering structure directly, instead of hand-building the suffix-minimum and pooling features.</li>
+          <li>Compare tabular transformers with Gradient Boosting.</li>
+          <li>Add real timetable, weather and airport-congestion data.</li>
+          <li>Use nested cross-validation to remove the small optimism from tuning.</li>
+          <li>Test the models on a second year of data to measure how well they transfer.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="about-block">
+      <div class="wrap">
+        <h2 class="section-heading">Run it yourself</h2>
+        <p>
+          The full code, report and figures are in the
+          <a href="https://github.com/radhikasinghal0112-source/flight-arrival-delay-prediction">GitHub repository</a>. The raw data files are not included, because they
+          were supplied for a university assignment and are not mine to redistribute. To run the
+          notebook, place the three course files next to it, then:
+        </p>
+<pre><code>pip install -r requirements.txt
+jupyter notebook notebook/flight_delay_models.ipynb</code></pre>
+        <p>
+          Running all seven models takes about 30 minutes on a two-core machine. The repository is
+          laid out like this:
+        </p>
+<pre><code>notebook/   shared preprocessing, then tuning, cut-off and hold-out for all seven models
+report/     full write-up (PDF) and its LaTeX source and figures
+figures/    PNG copies of three key charts
+requirements.txt</code></pre>
+        <div class="button-row">
+          <a class="cta-link" href="https://github.com/radhikasinghal0112-source/flight-arrival-delay-prediction">View the code on GitHub</a>
+          <a class="cta-link secondary" href="report.pdf">Read the full report (PDF)</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <nav aria-label="Footer navigation">
+      <ul class="footer-nav" role="list">
+        <li><a class="nav-link" href="index.html">Overview</a></li>
+          <li><a class="nav-link" href="finding.html">The Finding</a></li>
+          <li><a class="nav-link" href="models.html">Models</a></li>
+          <li><a class="nav-link current" href="limits.html" aria-current="page">Limits</a></li>
+          <li><a class="nav-link" href="comments.html">Comments</a></li>
+      </ul>
+    </nav>
+    <p class="footer-note">Course project for Introduction to Data Analytics, October 2026. The course data is not redistributed here.</p>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Models and Results | Flight Delay Prediction</title>
+  <meta name="description" content="Seven classifiers compared on flight delay prediction, with cross-validation, hold-out and Kaggle F1 scores, and a closer look at Gradient Boosting.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="brand">
+        <span class="brand-name">Flight Delay Prediction</span>
+        <span class="brand-sub">Data analytics project by Radhika Singhal</span>
+      </div>
+      <nav id="site-nav" aria-label="Main Navigation">
+        <ul class="nav-list" role="list">
+          <li><a class="nav-link" href="index.html">Overview</a></li>
+          <li><a class="nav-link" href="finding.html">The Finding</a></li>
+          <li><a class="nav-link current" href="models.html" aria-current="page">Models</a></li>
+          <li><a class="nav-link" href="limits.html">Limits</a></li>
+          <li><a class="nav-link" href="comments.html">Comments</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="hero">
+      <div class="wrap">
+        <p class="tagline">Seven models, compared fairly</p>
+        <h1>Features mattered far more than algorithms.</h1>
+        <p class="lead">
+          Gradient Boosting came out on top, but the more interesting result is how little the choice
+          of algorithm mattered once the key features existed.
+        </p>
+      </div>
+    </section>
+
+    <section class="about-block">
+      <div class="wrap">
+        <h2 class="section-heading">The seven models</h2>
+        <p>
+          Five methods were required (Decision Tree, KNN, Random Forest, SVM, Neural Network). I added
+          Gradient Boosting and Logistic Regression. All come from scikit-learn, and each was tuned
+          by randomised search with cross-validation on the training part only.
+        </p>
+        <div class="table-scroll" role="region" aria-label="The seven models and their chosen settings" tabindex="0">
+          <table>
+            <caption>What each model does, and the settings the search chose</caption>
+            <thead>
+              <tr>
+                <th scope="col">Model</th>
+                <th scope="col">Idea</th>
+                <th scope="col">Chosen settings</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Decision Tree</th>
+                <td>Splits recursively on thresholds, giving readable rules.</td>
+                <td>Depth 8, at most 60 leaves</td>
+              </tr>
+              <tr>
+                <th scope="row">KNN</th>
+                <td>Majority vote among the nearest training flights.</td>
+                <td>k = 75, distance weights, Manhattan distance</td>
+              </tr>
+              <tr>
+                <th scope="row">Random Forest</th>
+                <td>Averages many trees grown on bootstrap samples.</td>
+                <td>400 trees, no depth limit</td>
+              </tr>
+              <tr>
+                <th scope="row">SVM (RBF)</th>
+                <td>Maximum-margin boundary in a kernel space.</td>
+                <td>C = 1, gamma = 0.03, balanced weights</td>
+              </tr>
+              <tr>
+                <th scope="row">Neural Network</th>
+                <td>Multilayer perceptron with early stopping.</td>
+                <td>Two hidden layers (64, 32), L2 penalty</td>
+              </tr>
+              <tr>
+                <th scope="row">Gradient Boosting</th>
+                <td>Adds small trees one at a time, each fixing the errors so far.</td>
+                <td>Learning rate 0.05, 31 leaves per tree</td>
+              </tr>
+              <tr>
+                <th scope="row">Logistic Regression</th>
+                <td>Linear baseline that shows how much non-linearity there is.</td>
+                <td>C = 0.1, balanced weights</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-block">
+      <div class="wrap">
+        <h2 class="section-heading">Results</h2>
+        <p>
+          F1 of the delayed class. Cross-validation and hold-out use an 80/20 split of the labelled
+          file. Kaggle is the public leaderboard score on the unlabelled file. Models were chosen on
+          cross-validation and hold-out results, and the Kaggle score was consulted afterwards.
+        </p>
+        <div class="table-scroll" role="region" aria-label="F1 results for all seven models" tabindex="0">
+          <table>
+            <caption>F1 of the delayed class, sorted by Kaggle score</caption>
+            <thead>
+              <tr>
+                <th scope="col">Model</th>
+                <th scope="col" class="num">Cross-val F1</th>
+                <th scope="col" class="num">Hold-out F1</th>
+                <th scope="col" class="num">Kaggle F1</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="best"><th scope="row">Gradient Boosting</th><td class="num">0.853</td><td class="num">0.853</td><td class="num">0.8471</td></tr>
+              <tr><th scope="row">Random Forest</th><td class="num">0.845</td><td class="num">0.848</td><td class="num">0.8396</td></tr>
+              <tr><th scope="row">SVM (RBF)</th><td class="num">0.840</td><td class="num">0.837</td><td class="num">0.8391</td></tr>
+              <tr><th scope="row">Neural Network</th><td class="num">0.842</td><td class="num">0.839</td><td class="num">0.8362</td></tr>
+              <tr><th scope="row">Decision Tree</th><td class="num">0.833</td><td class="num">0.833</td><td class="num">0.8275</td></tr>
+              <tr><th scope="row">KNN</th><td class="num">0.825</td><td class="num">0.825</td><td class="num">0.8168</td></tr>
+              <tr><th scope="row">Logistic Regression</th><td class="num">0.783</td><td class="num">0.789</td><td class="num">0.7730</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <figure class="figure" tabindex="0" role="group" aria-label="Chart, scrolls sideways on small screens">
+          <img src="figures/fig6_models.png" width="1267" height="491" alt="Dot chart of F1 for each of the seven models, showing cross-validated, hold-out and Kaggle scores. Gradient Boosting is highest at about 0.85, Logistic Regression lowest at about 0.78. The three estimates agree within 0.9 points for six models and 1.6 points for Logistic Regression." loading="lazy">
+          <figcaption>The three estimates agree within 0.9 points for six models and within 1.6 points for Logistic Regression, and Gradient Boosting is highest on all three.</figcaption>
+        </figure>
+        <p>
+          Neighbouring models are separated by 0.3 to 0.8 points, which is within sampling error, so
+          the ordering of the middle group should not be over-read. Gradient Boosting&rsquo;s lead of
+          1.4 to 2.8 points over the SVM, Neural Network, Decision Tree and KNN is more reliable.
+        </p>
+      </div>
+    </section>
+
+    <section class="about-block">
+      <div class="wrap">
+        <h2 class="section-heading">What actually moved the score</h2>
+        <p>
+          Tuning for F1 added 3.6 points on Kaggle. The row-order features then added a further 17 to
+          19 points. A wider search and ensembling together changed results by 0.5 points or less.
+        </p>
+        <figure class="figure narrow">
+          <img src="figures/fig5_stages.png" width="981" height="436" alt="Horizontal bar chart of Kaggle F1 at four stages. A Decision Tree tuned on accuracy scores 0.6044 and tuned on F1 scores 0.6407. Adding row-order features with Gradient Boosting gives 0.8308, and adding pooled and slot features gives 0.8471." loading="lazy">
+          <figcaption>Kaggle F1 at four stages of development. Grey bars are the Decision Tree before the row-order features; purple bars are Gradient Boosting after them.</figcaption>
+        </figure>
+        <div class="table-scroll" role="region" aria-label="Hold-out F1 as feature groups were added" tabindex="0">
+          <table>
+            <caption>Hold-out F1 as feature groups were added, one at a time, for all seven models</caption>
+            <thead>
+              <tr>
+                <th scope="col">Model</th>
+                <th scope="col" class="num">Base</th>
+                <th scope="col" class="num">+ Row order</th>
+                <th scope="col" class="num">+ Pooled</th>
+                <th scope="col" class="num">+ Slot</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="best"><th scope="row">Gradient Boosting</th><td class="num">0.660</td><td class="num">0.838</td><td class="num">0.848</td><td class="num">0.853</td></tr>
+              <tr><th scope="row">Random Forest</th><td class="num">0.661</td><td class="num">0.834</td><td class="num">0.848</td><td class="num">0.848</td></tr>
+              <tr><th scope="row">Neural Network</th><td class="num">0.657</td><td class="num">0.821</td><td class="num">0.839</td><td class="num">0.838</td></tr>
+              <tr><th scope="row">SVM (RBF)</th><td class="num">0.653</td><td class="num">0.823</td><td class="num">0.837</td><td class="num">0.837</td></tr>
+              <tr><th scope="row">Decision Tree</th><td class="num">0.640</td><td class="num">0.816</td><td class="num">0.832</td><td class="num">0.833</td></tr>
+              <tr><th scope="row">KNN</th><td class="num">0.645</td><td class="num">0.811</td><td class="num">0.823</td><td class="num">0.825</td></tr>
+              <tr><th scope="row">Logistic Regression</th><td class="num">0.634</td><td class="num">0.770</td><td class="num">0.789</td><td class="num">0.787</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          The slot group helped only Gradient Boosting, KNN and the Decision Tree, and by small
+          amounts, so I treat its benefit as unproven. The other four final models use the pooled set.
+        </p>
+      </div>
+    </section>
+
+    <section class="about-block">
+      <div class="wrap">
+        <h2 class="section-heading">A closer look at Gradient Boosting</h2>
+        <p>
+          On the hold-out of 8,527 flights, the model reaches precision 0.860, recall 0.847, F1 0.853,
+          accuracy 0.904 and AUC 0.962. It found 2,370 delayed flights, missed 429, and wrongly
+          flagged 386 on-time flights.
+        </p>
+        <figure class="figure" tabindex="0" role="group" aria-label="Chart, scrolls sideways on small screens">
+          <img src="figures/fig7_gb.png" width="1273" height="435" alt="Two panels. Left: a curve of out-of-fold F1 against the share of flights flagged, peaking at 0.853 near 31.8 percent flagged, where the chosen cut-off of 0.42 sits on a flat part of the curve. Right: a confusion matrix of the hold-out set with 5,342 true negatives, 386 false positives, 429 false negatives and 2,370 true positives." loading="lazy">
+          <figcaption>Out-of-fold F1 across cut-offs (left) and the hold-out confusion matrix at the chosen cut-off of 0.42 (right). The curve is flat near its peak, so the choice does not rest on a fragile maximum.</figcaption>
+        </figure>
+        <div class="table-scroll" role="region" aria-label="Effect of the cut-off on precision, recall and F1" tabindex="0">
+          <table>
+            <caption>Effect of the cut-off on out-of-fold precision, recall and F1 (training part)</caption>
+            <thead>
+              <tr>
+                <th scope="col" class="num">Cut-off</th>
+                <th scope="col" class="num">Flagged (%)</th>
+                <th scope="col" class="num">Precision</th>
+                <th scope="col" class="num">Recall</th>
+                <th scope="col" class="num">F1</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="num">0.25</td><td class="num">37.1</td><td class="num">0.789</td><td class="num">0.892</td><td class="num">0.837</td></tr>
+              <tr><td class="num">0.30</td><td class="num">35.2</td><td class="num">0.817</td><td class="num">0.877</td><td class="num">0.846</td></tr>
+              <tr class="best"><td class="num">0.42</td><td class="num">31.8</td><td class="num">0.868</td><td class="num">0.840</td><td class="num">0.853</td></tr>
+              <tr><td class="num">0.55</td><td class="num">29.1</td><td class="num">0.904</td><td class="num">0.800</td><td class="num">0.849</td></tr>
+              <tr><td class="num">0.70</td><td class="num">25.9</td><td class="num">0.945</td><td class="num">0.746</td><td class="num">0.834</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          F1 weights precision and recall equally, so the best cut-off is a compromise. An operator who
+          values catching delays over avoiding false alarms would choose a lower cut-off, and one who
+          acts on each flag at a cost would choose a higher one.
+        </p>
+        <h3>Which inputs the model relies on</h3>
+        <p>
+          Shuffling the columns that carry the row-order and pooled information lowers hold-out F1 by
+          0.302, and shuffling the schedule gap and duration columns lowers it by 0.264. Departure
+          time, geography, date and airline matter little. The model rests almost entirely on the two
+          signals from <a href="finding.html">The Finding</a>.
+        </p>
+        <figure class="figure" tabindex="0" role="group" aria-label="Chart, scrolls sideways on small screens">
+          <img src="figures/fig9_errors.png" width="1344" height="455" alt="Two charts. Left: bars showing the fall in F1 when each input group is shuffled, with the estimated departure delay columns at 0.302 and the schedule gap and duration columns at 0.264, and airline at only 0.004. Right: error rate by the sum of schedule gap and estimated departure delay, peaking at 28 percent where about half of flights are delayed and falling to 3 percent or less beyond 10 minutes." loading="lazy">
+          <figcaption>Left: fall in hold-out F1 when each group of inputs is shuffled. Right: errors peak where about half of the flights are delayed, near the point where the label switches on.</figcaption>
+        </figure>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <nav aria-label="Footer navigation">
+      <ul class="footer-nav" role="list">
+        <li><a class="nav-link" href="index.html">Overview</a></li>
+          <li><a class="nav-link" href="finding.html">The Finding</a></li>
+          <li><a class="nav-link current" href="models.html" aria-current="page">Models</a></li>
+          <li><a class="nav-link" href="limits.html">Limits</a></li>
+          <li><a class="nav-link" href="comments.html">Comments</a></li>
+      </ul>
+    </nav>
+    <p class="footer-note">Course project for Introduction to Data Analytics, October 2026. The course data is not redistributed here.</p>
+  </footer>
+
+</body>
+</html>

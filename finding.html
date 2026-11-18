@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Finding | Flight Delay Prediction</title>
+  <meta name="description" content="How the flight data files turned out to be sorted by scheduled departure time, and how that revealed each flight's departure delay.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="brand">
+        <span class="brand-name">Flight Delay Prediction</span>
+        <span class="brand-sub">Data analytics project by Radhika Singhal</span>
+      </div>
+      <nav id="site-nav" aria-label="Main Navigation">
+        <ul class="nav-list" role="list">
+          <li><a class="nav-link" href="index.html">Overview</a></li>
+          <li><a class="nav-link current" href="finding.html" aria-current="page">The Finding</a></li>
+          <li><a class="nav-link" href="models.html">Models</a></li>
+          <li><a class="nav-link" href="limits.html">Limits</a></li>
+          <li><a class="nav-link" href="comments.html">Comments</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="hero">
+      <div class="wrap">
+        <p class="tagline">The data and the discovery</p>
+        <h1>Two files, one hidden pattern.</h1>
+        <p class="lead">
+          Before any model, the files needed a closer look. What I found there explains almost all of
+          the project's accuracy.
+        </p>
+      </div>
+    </section>
+
+    <section class="about-block">
+      <div class="wrap">
+        <h2 class="section-heading">The task and the data</h2>
+        <p>
+          Given the recorded attributes of a flight, predict <code>Arrival_Delay</code>, where 1 means
+          delayed and 0 means not delayed. The 15 inputs describe the origin, destination, airline,
+          date, departure time, scheduled and elapsed duration, air time, distance, wheels-on time and
+          taxi-in time. A labelled file of 42,634 flights was used to build models, and an unlabelled
+          file of 21,318 flights was used for the final Kaggle assessment.
+        </p>
+        <p>
+          Of the labelled flights, 32.8% are delayed. A classifier that always predicts &ldquo;not
+          delayed&rdquo; would be 67.2% accurate, yet its F1 for the delayed class would be zero.
+          That is why the project is scored on F1.
+        </p>
+        <h3>Why the metric changed the result</h3>
+        <p>
+          A first Decision Tree tuned for accuracy scored 0.6044 on Kaggle. Tuning the same model for
+          F1, and choosing the cut-off to maximise F1, raised it to 0.6407. Every later model was
+          tuned the same way.
+        </p>
+      </div>
+    </section>
+
+    <section class="about-block">
+      <div class="wrap">
+        <h2 class="section-heading">What the data looks like</h2>
+        <p>
+          Time of day separates flights well: the delayed share rises from 12% for 05:00 departures to
+          51% for 22:00 departures, about four times as high. The six airlines span only 27% to 36%,
+          so airline turned out to be a minor input.
+        </p>
+        <figure class="figure" tabindex="0" role="group" aria-label="Chart, scrolls sideways on small screens">
+          <img src="figures/fig2_eda.png" width="1357" height="395" alt="Two charts. Left: a bar chart showing the share of delayed flights rising from 12 percent at 5 am to 51 percent at 10 pm, against an overall share of 32.8 percent. Right: a dot chart showing the six airlines between 27 percent and 36 percent delayed." loading="lazy">
+          <figcaption>Delayed share by departure hour (left) and by airline (right). The dashed line is the overall share of 32.8%.</figcaption>
+        </figure>
+        <h3>Missing values</h3>
+        <p>
+          The two files have different gaps. The unlabelled file is missing 6% to 10% of values in
+          columns that are complete in the labelled file, at suspiciously round rates, so the models
+          had to cope with duration columns being imputed at prediction time even though they were
+          complete in training.
+        </p>
+        <figure class="figure narrow">
+          <img src="figures/fig3_missing.png" width="814" height="507" alt="Horizontal bar chart of the percentage of missing values per column in the labelled and unknown files. The unknown file has extra gaps of 6 to 10 percent in elapsed time, air time and the cancelled flag." loading="lazy">
+          <figcaption>Share of values missing in each file.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="about-block">
+      <div class="wrap">
+        <h2 class="section-heading">The hidden structure</h2>
+        <p>
+          Within each day, the row position correlates 0.97 with departure clock time on average over
+          334 days. The files are sorted by date and then by <em>scheduled</em> departure time, a
+          column that is never supplied.
+        </p>
+        <p>
+          That matters because a flight that left on time appears exactly where its departure time
+          puts it, while a flight that left late appears out of place, with a departure later than
+          flights listed after it. The earliest actual departure among the later rows bounds the
+          scheduled departure, and the gap estimates the departure delay.
+        </p>
+        <figure class="figure narrow">
+          <img src="figures/fig4_order.png" width="661" height="506" alt="Scatter plot of departure hour against row position for one day, 23 November 2015. Purple dots for on-time flights rise along a smooth staircase. Orange diamonds for flights that left late sit above the staircase, and the vertical gap to the staircase is the estimated departure delay. 34 of 128 flights are out of place." loading="lazy">
+          <figcaption>One day of the labelled file: 34 of its 128 flights are out of place. The vertical gap between a late flight and the staircase estimates its departure delay.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="about-block">
+      <div class="wrap">
+        <h2 class="section-heading">Why two signals beat one</h2>
+        <p>
+          An arrival delay is largely the departure delay plus any extra time spent on the route. The
+          schedule gap (elapsed time minus scheduled time) captures the second part, and the estimated
+          departure delay captures the first. Each alone reaches an AUC of only about 0.73. Together
+          they reach <span class="highlight">0.903</span>.
+        </p>
+        <figure class="figure" tabindex="0" role="group" aria-label="Chart, scrolls sideways on small screens">
+          <img src="figures/fig8_signals.png" width="1344" height="425" alt="Two bar charts. Left: among flights estimated to leave on time, the share delayed rises from 8 percent when the schedule gap is zero or less to 62 percent at 5 to 8 minutes and above 94 percent beyond 10 minutes. Right: the delayed share rises from 20 percent to 99 percent as the estimated departure delay grows to 30 to 60 minutes. A box notes AUC of 0.736 and 0.731 alone and 0.903 combined." loading="lazy">
+          <figcaption>The delayed share climbs steeply with each signal. The label switches on after a few minutes of extra time, not at the 15-minute threshold of official on-time statistics.</figcaption>
+        </figure>
+        <h3>Try it yourself</h3>
+        <p>
+          Drag each slider to see how the share of delayed flights changes. The values are the observed
+          shares from the charts above, not a model&rsquo;s predictions.
+        </p>
+        <noscript><p>This interactive view needs JavaScript. The charts above show the same numbers.</p></noscript>
+        <div class="explorer" id="explorer" hidden>
+          <div class="explorer-grid">
+            <div class="explorer-card">
+              <label class="explorer-label" for="gap-slider">Schedule gap (elapsed minus scheduled time)</label>
+              <input type="range" id="gap-slider" min="0" max="6" step="1" value="3">
+              <div class="explorer-ends" aria-hidden="true"><span>0 or less</span><span>over 15 min</span></div>
+              <p class="explorer-value" id="gap-value"></p>
+              <div class="meter" aria-hidden="true"><div class="meter-fill" id="gap-fill"></div></div>
+              <p class="explorer-readout" id="gap-out" role="status" aria-live="polite"></p>
+            </div>
+            <div class="explorer-card">
+              <label class="explorer-label" for="dep-slider">Estimated departure delay</label>
+              <input type="range" id="dep-slider" min="0" max="5" step="1" value="3">
+              <div class="explorer-ends" aria-hidden="true"><span>no delay</span><span>over 60 min</span></div>
+              <p class="explorer-value" id="dep-value"></p>
+              <div class="meter" aria-hidden="true"><div class="meter-fill" id="dep-fill"></div></div>
+              <p class="explorer-readout" id="dep-out" role="status" aria-live="polite"></p>
+            </div>
+          </div>
+          <p class="explorer-note">
+            The two sliders are separate views of the same pattern. They do not combine into one
+            estimate, which is exactly why using both signals together (AUC 0.903) beats either alone.
+          </p>
+        </div>
+        <div class="table-scroll" role="region" aria-label="Six findings about the data files" tabindex="0">
+          <table>
+            <caption>Six things I found in the files, and what each meant for modelling</caption>
+            <thead>
+              <tr>
+                <th scope="col">Finding</th>
+                <th scope="col">Consequence</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Rows are sorted by date, then scheduled departure time</th>
+                <td>Departure delay can be estimated from row order.</td>
+              </tr>
+              <tr>
+                <th scope="row">The files differ in density: about 128 flights a day labelled, 64 unlabelled</th>
+                <td>Features are computed on halves of about 64 flights a day, so training matches prediction time.</td>
+              </tr>
+              <tr>
+                <th scope="row">19% of flights recur within 45 days</th>
+                <td>Pooling the copies gives a sharper schedule estimate.</td>
+              </tr>
+              <tr>
+                <th scope="row">The label turns on at about 5 minutes late</th>
+                <td>It is close to &ldquo;arrived more than a few minutes behind schedule&rdquo;, not the common 15-minute rule.</td>
+              </tr>
+              <tr>
+                <th scope="row">Missing values differ between the files</th>
+                <td>Imputation had to cover columns that were complete in training.</td>
+              </tr>
+              <tr>
+                <th scope="row">Cancelled and diverted flags are constant; October is absent from both files</th>
+                <td>The constant columns were dropped, and the models should not be applied to October.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <nav aria-label="Footer navigation">
+      <ul class="footer-nav" role="list">
+        <li><a class="nav-link" href="index.html">Overview</a></li>
+          <li><a class="nav-link current" href="finding.html" aria-current="page">The Finding</a></li>
+          <li><a class="nav-link" href="models.html">Models</a></li>
+          <li><a class="nav-link" href="limits.html">Limits</a></li>
+          <li><a class="nav-link" href="comments.html">Comments</a></li>
+      </ul>
+    </nav>
+    <p class="footer-note">Course project for Introduction to Data Analytics, October 2026. The course data is not redistributed here.</p>
+  </footer>
+
+<script src="explorer.js" defer></script>
+</body>
+</html>
