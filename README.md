@@ -1,5 +1,7 @@
 # Flight Delay Prediction: project website
 
+**Live write-up:** [radhikasinghal0112-source.github.io/flight-delay-website](https://radhikasinghal0112-source.github.io/flight-delay-website/)
+
 A small static website (plain HTML and CSS, no build step) that presents my flight arrival delay
 prediction project from Introduction to Data Analytics: the task, the hidden pattern in the data
 files, the seven models, and the limits of the result.
